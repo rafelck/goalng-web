@@ -2,6 +2,7 @@ package golang_web
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -78,8 +79,14 @@ func HelloHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func TestHelloHandler(t *testing.T) {
-	request := httptest.NewRequest("GET", "http://localhost:8080/hello-rafel", nil)
+	request := httptest.NewRequest(http.MethodGet, "http://localhost:8080/hello-rafel", nil)
 	recorder := httptest.NewRecorder()
 
 	HelloHandler(recorder, request)
+
+	response := recorder.Result()
+	body, _ := io.ReadAll(response.Body)
+	bodyString := string(body)
+	fmt.Println(bodyString)
+
 }
